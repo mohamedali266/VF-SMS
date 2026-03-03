@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="img/VF.png" type="image/svg+xml">
+<title>VF SMS</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #d62828 0%, #b91c1c 30%, #991b1b 60%, #7f1d1d 100%);
+    background-attachment: fixed;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.container {
+    max-width: 750px;
+    width: 100%;
+    margin: 20px auto;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+h2 {
+    color: white;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    letter-spacing: -0.5px;
+}
+
+h3 {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 16px;
+    font-weight: 600;
+    margin: 20px 0 14px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.5px;
+}
+
+label {
+    display: block;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: inherit;
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+input::placeholder, textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+input:focus, select:focus, textarea:focus {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
+}
+
+select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+}
+
+select option {
+    background: #667eea;
+    color: white;
+}
+
+textarea {
+    height: 280px;
+    resize: vertical;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+button {
+    flex: 1;
+    min-width: 140px;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.3px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #e63946 0%, #d62828 50%, #b91c1c 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(214, 40, 40, 0.4);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(214, 40, 40, 0.5);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.result {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.result span {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.green { color: #4ade80 !important; }
+.orange { color: #fbbf24 !important; }
+.red { color: #f87171 !important; }
+
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.input-full {
+    grid-column: 1 / -1;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    body {
+        padding: 12px;
+    }
+
+    .container {
+        padding: 20px;
+        margin: 10px auto;
+        border-radius: 20px;
+    }
+
+    h2 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        font-size: 14px;
+        margin: 16px 0 10px 0;
+    }
+
+    input, select, textarea {
+        padding: 12px 14px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+
+    .input-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .result {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+
+    .result span {
+        font-size: 16px;
+    }
+
+    textarea {
+        height: 220px;
+    }
+}
+
+@media (max-width: 400px) {
+    .container {
+        padding: 16px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.container {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>📊 Daily SMS Report</h2>
+
+<label>Choose Template</label>
+<select id="templateSelect">
+  <option value="template2">Message 2 (Voice Points)</option>
+  <option value="template1">Message 1 (VP / GA / EP / Connectivity)</option>
+</select>
+
+<label>Store Name</label>
+<input type="text" id="store" value="Amerya koubry Store">
+
+<label>Date</label>
+<input type="date" id="date">
+
+<!-- Template 2 Inputs -->
+<div id="template2_inputs">
+<h3>Voice Calculation</h3>
+<div class="input-grid">
+<input type="number" id="flex45" placeholder="Flex45">
+<input type="number" id="flex70" placeholder="Flex70">
+<input type="number" id="flex100" placeholder="Flex100">
+<input type="number" id="red" placeholder="Red New">
+<input type="number" id="vmt" placeholder="VMT Active Wallet">
+</div>
+
+<div class="result">
+Voice Points: <span id="voice_total">0</span> |
+Achievement: <span id="voice_percent">0%</span>
+</div>
+
+<h3>Other Inputs</h3>
+<div class="input-grid">
+<input type="number" id="voice_required" placeholder="Voice Points Required" value="850">
+<input type="number" id="consumer_ach" placeholder="Consumer Voice Ach">
+<input type="number" id="consumer_required" placeholder="Consumer Voice Required" value="80">
+<input type="number" id="terminal_ach" placeholder="Terminal Points Ach">
+<input type="number" id="terminal_required" placeholder="Terminal Points Required" value="0">
+<input type="number" id="adsl_ach" placeholder="ADSL Ach">
+<input type="number" id="adsl_required" placeholder="ADSL Required" value="0">
+<input type="number" id="wallet_required" placeholder="Active Wallet Required" value="0">
+<input type="number" id="red_conversion" placeholder="Red Conversion">
+<input type="number" id="mnp_pre" placeholder="MNP Prepaid">
+<input type="number" id="mnp_post" placeholder="MNP Postpaid">
+<input type="number" id="enterprise" placeholder="Enterprise">
+</div>
+</div>
+
+<!-- Template 1 Inputs -->
+<div id="template1_inputs" style="display:none">
+<h3>VP / GA / EP / Connectivity</h3>
+<div class="input-grid">
+<input type="number" id="vp_target" placeholder="VP Target" value="850">
+<input type="number" id="vp_ach" placeholder="VP Achievement">
+<input type="number" id="ga_voice_target" placeholder="GA Voice Target" value="80">
+<input type="number" id="ga_voice_ach" placeholder="GA Voice Ach">
+<input type="number" id="adsl_target" placeholder="ADSL Target">
+<input type="number" id="adsl_ach" placeholder="ADSL Ach">
+<input type="number" id="con_target" placeholder="Connectivity Target">
+<input type="number" id="con_ach" placeholder="Connectivity Ach">
+<input type="number" id="ep_ga_target" placeholder="EP GA Target">
+<input type="number" id="ep_ga_ach" placeholder="EP GA Ach">
+<input type="number" id="ep_p_target" placeholder="EP P Target">
+<input type="number" id="ep_p_ach" placeholder="EP P Ach">
+<input type="number" id="red_target1" placeholder="Red Target">
+<input type="number" id="red_ach1" placeholder="Red Achievement">
+<input type="number" id="terminal_target1" placeholder="Terminal Target">
+<input type="number" id="terminal_ach1" placeholder="Terminal Ach">
+<input type="number" id="vmt1" placeholder="VMT Wallet" value="53">
+<input type="number" id="mnp1" placeholder="MNP">
+<input type="number" id="trx1" placeholder="TRX">
+</div>
+</div>
+
+<br>
+<div class="button-group">
+<button class="btn-secondary" onclick="clearToday()">Clear Today</button>
+<button class="btn-primary" onclick="copyMessage()">Copy Message</button>
+</div>
+
+<textarea id="output"></textarea>
+
+</div>
+
+<script>
+const templateSelect = document.getElementById("templateSelect");
+const template1Div = document.getElementById("template1_inputs");
+const template2Div = document.getElementById("template2_inputs");
+
+templateSelect.addEventListener("change", ()=>{
+    if(templateSelect.value=="template1"){
+        template1Div.style.display="block";
+        template2Div.style.display="none";
+    } else {
+        template1Div.style.display="block";
+        template2Div.style.display="block";
+        template1Div.style.display="none";
+    }
+    generateMessage();
+});
+
+// ===== Date Default =====
+document.getElementById("date").valueAsDate = new Date();
+
+// ===== Inputs & Auto Save =====
+const allInputs = document.querySelectorAll("input");
+allInputs.forEach(input=>{
+    input.addEventListener("input", ()=>{
+        if(templateSelect.value=="template2") calculateVoice2();
+        generateMessage();
+        saveData();
+    });
+});
+
+// ===== Load Saved Data =====
+window.onload = function(){
+    const saved = JSON.parse(localStorage.getItem("reportMultiData"));
+    if(saved){
+        Object.keys(saved).forEach(id=>{
+            if(document.getElementById(id)){
+                document.getElementById(id).value = saved[id];
+            }
+        });
+    }
+    if(templateSelect.value=="template2") calculateVoice2();
+    generateMessage();
+};
+
+function saveData(){
+    const data = {};
+    allInputs.forEach(input=>{
+        data[input.id] = input.value;
+    });
+    localStorage.setItem("reportMultiData", JSON.stringify(data));
+}
+
+// ===== Voice Points Template 2 =====
+function calculateVoice2(){
+    const f45 = +document.getElementById("flex45").value || 0;
+    const f70 = +document.getElementById("flex70").value || 0;
+    const f100 = +document.getElementById("flex100").value || 0;
+    const red = +document.getElementById("red").value || 0;
+    const vmt = +document.getElementById("vmt").value || 0;
+    const required = +document.getElementById("voice_required").value || 0;
+
+    const total = (f45*2)+(f70*6)+(f100*8)+(red*40)+(vmt*5);
+    document.getElementById("voice_total").innerText = total;
+
+    let percent = 0;
+    if(required>0) percent=((total/required)*100).toFixed(1);
+
+    const percentEl = document.getElementById("voice_percent");
+    percentEl.innerText = percent+"%";
+    percentEl.className="";
+    if(percent>=100) percentEl.classList.add("green");
+    else if(percent>=70) percentEl.classList.add("orange");
+    else percentEl.classList.add("red");
+    return total;
+}
+
+// ===== Generate Message =====
+function generateMessage(){
+    const store = document.getElementById("store").value;
+    const date = document.getElementById("date").value;
+
+    let message="";
+    if(templateSelect.value=="template2"){
+        const voiceAch = calculateVoice2();
+        function val(id){return document.getElementById(id).value||"";}
+        message=`${store}
+${date}
+
+Voice points daily ach :${voiceAch}
+Voice points required : ${val("voice_required")}
+
+Consumer voice daily ach : ${val("consumer_ach")}
+Consumer voice daily required : ${val("consumer_required")}
+Terminals points ac : ${val("terminal_ach")}
+Terminal points  required : ${val("terminal_required")}
+ADSl daily ach : ${val("adsl_ach")}
+ADSl daily required : ${val("adsl_required")}
+
+VMT Active wallet ach: ${val("vmt")}
+Active wallet required.  : ${val("wallet_required")}
+Red New : ${val("red")}
+Red Conversion : ${val("red_conversion")}
+MNP prepaid : ${val("mnp_pre")}
+MNP postpaid : ${val("mnp_post")}
+Enterprise : ${val("enterprise")}`;
+    } else {
+        function val(id){return document.getElementById(id).value||"";}
+        message=`${store}
+${date}
+
+VP daily target : ${val("vp_target")}
+VP daily Ach : ${val("vp_ach")}
+
+GA voice  target: ${val("ga_voice_target")}
+GA voice Ach: ${val("ga_voice_ach")}
+ADSL GA target : ${val("adsl_target")}
+ADSl GA Ach : ${val("adsl_ach")}
+Connectivity p  target  : ${val("con_target")}
+Connectivity p Ach:${val("con_ach")}
+EP GA target : ${val("ep_ga_target")}
+EP GA daily Ach: ${val("ep_ga_ach")}
+EP p daily target : ${val("ep_p_target")}
+EP p daily Ach: ${val("ep_p_ach")}
+
+Red Target: ${val("red_target1")}
+Red Achievement: ${val("red_ach1")}
+
+Terminal target: ${val("terminal_target1")}
+Terminal ach : ${val("terminal_ach1")}
+VMT wallet :${val("vmt1")}
+Mnp: ${val("mnp1")}
+Trx:${val("trx1")}
+
+Contracts & sim swap form
+ checked by: m.ali`;
+    }
+
+    document.getElementById("output").value = message;
+}
+
+// ===== Copy =====
+function copyMessage(){
+    const text = document.getElementById("output");
+    text.select();
+    document.execCommand("copy");
+    alert("Copied ✔");
+}
+
+// ===== Clear Today =====
+function clearToday(){
+    allInputs.forEach(input=>{
+        if(input.defaultValue) input.value=input.defaultValue;
+        else input.value="";
+    });
+    if(templateSelect.value=="template2") calculateVoice2();
+    generateMessage();
+    saveData();
+}
+
+</script>
+
+</body>
+</html>
