@@ -354,6 +354,7 @@ Achievement: <span id="voice_percent">0%</span>
 <input type="number" id="terminal_target1" placeholder="Terminal Target">
 <input type="number" id="terminal_ach1" placeholder="Terminal Ach">
 <input type="number" id="vmt1" placeholder="VMT Wallet" value="53">
+<input type="text" id="contracts_name" placeholder="Contracts & Sim Swap Form Name" value="m.ali">
 <input type="number" id="mnp1" placeholder="MNP">
 <input type="number" id="trx1" placeholder="TRX">
 </div>
@@ -503,7 +504,7 @@ Mnp: ${val("mnp1")}
 Trx:${val("trx1")}
 
 Contracts & sim swap form
- checked by: m.ali`;
+ checked by: ${val("contracts_name")}`;
     }
 
     document.getElementById("output").value = message;
