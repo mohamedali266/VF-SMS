@@ -401,6 +401,7 @@ grid-template-columns: 1fr;
 
 <div class="nav-buttons">
 <a href="index.html" class="nav-btn nav-btn-secondary">← Back to Home</a>
+<a href="todo.html" class="nav-btn nav-btn-secondary">📋 ToDo List</a>
 </div>
 
 <div class="controls">
@@ -550,8 +551,13 @@ allEmployees.push(employee);
 }
 
 initDays(daysList);
-if (daysList.length > 0) {
-renderDay(daysList[0]);
+const today = new Date().getDate();
+const todayInList = daysList.find(d => parseInt(d) === today);
+if (todayInList) {
+    document.getElementById('daySelect').value = todayInList;
+    renderDay(todayInList);
+} else if (daysList.length > 0) {
+    renderDay(daysList[0]);
 }
 }
 
@@ -632,8 +638,13 @@ allEmployees.push(employee);
 }
 
 initDays(daysList);
-if (daysList.length > 0) {
-renderDay(daysList[0]);
+const today2 = new Date().getDate();
+const todayInList2 = daysList.find(d => parseInt(d) === today2);
+if (todayInList2) {
+    document.getElementById('daySelect').value = todayInList2;
+    renderDay(todayInList2);
+} else if (daysList.length > 0) {
+    renderDay(daysList[0]);
 }
 }
 
