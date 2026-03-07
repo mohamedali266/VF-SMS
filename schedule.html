@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Schedule</title>
+<link rel="icon" href="img/vf_icon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+min-height: 100vh;
+background: linear-gradient(135deg, #d62828 0%, #b91c1c 30%, #991b1b 60%, #7f1d1d 100%);
+background-attachment: fixed;
+padding: 20px;
+display: flex;
+justify-content: center;
+align-items: flex-start;
+}
+
+.container {
+max-width: 1200px;
+width: 100%;
+margin: 20px auto;
+background: rgba(255, 255, 255, 0.15);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.3);
+border-radius: 24px;
+padding: 32px;
+box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+h1 {
+text-align: center;
+margin-bottom: 30px;
+font-size: 32px;
+font-weight: 700;
+letter-spacing: -0.5px;
+text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 span {
+display: inline-block;
+animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+0%, 100% { transform: scale(1); }
+50% { transform: scale(1.05); }
+}
+
+.nav-buttons {
+display: flex;
+justify-content: center;
+gap: 12px;
+margin-bottom: 24px;
+}
+
+.nav-btn {
+padding: 12px 24px;
+border: none;
+border-radius: 12px;
+font-size: 14px;
+font-weight: 600;
+font-family: inherit;
+cursor: pointer;
+transition: all 0.3s ease;
+text-decoration: none;
+display: inline-block;
+}
+
+.nav-btn-primary {
+background: linear-gradient(135deg, #e63946 0%, #d62828 50%, #b91c1c 100%);
+color: white;
+box-shadow: 0 4px 15px rgba(214, 40, 40, 0.4);
+}
+
+.nav-btn-primary:hover {
+transform: translateY(-2px);
+box-shadow: 0 6px 20px rgba(214, 40, 40, 0.5);
+}
+
+.nav-btn-secondary {
+background: rgba(255, 255, 255, 0.2);
+color: white;
+border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.nav-btn-secondary:hover {
+background: rgba(255, 255, 255, 0.3);
+transform: translateY(-2px);
+}
+
+.controls {
+display: flex;
+gap: 20px;
+justify-content: center;
+margin-bottom: 40px;
+flex-wrap: wrap;
+}
+
+.search-box {
+position: relative;
+flex: 1;
+max-width: 400px;
+min-width: 280px;
+}
+
+.search-box input {
+width: 100%;
+padding: 16px 20px;
+padding-left: 50px;
+border-radius: 16px;
+border: 2px solid rgba(255,255,255,0.2);
+background: rgba(255,255,255,0.1);
+backdrop-filter: blur(10px);
+color: white;
+font-size: 16px;
+font-family: inherit;
+transition: all 0.3s ease;
+}
+
+.search-box input::placeholder {
+color: rgba(255,255,255,0.5);
+}
+
+.search-box input:focus {
+outline: none;
+border-color: rgba(255,255,255,0.5);
+background: rgba(255,255,255,0.15);
+box-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+
+.search-box::before {
+content: "🔍";
+position: absolute;
+left: 18px;
+top: 50%;
+transform: translateY(-50%);
+font-size: 18px;
+}
+
+.day-select {
+min-width: 200px;
+padding: 16px 20px;
+border-radius: 16px;
+border: 2px solid rgba(255,255,255,0.2);
+background: rgba(255,255,255,0.1);
+backdrop-filter: blur(10px);
+color: white;
+font-size: 16px;
+font-family: inherit;
+cursor: pointer;
+appearance: none;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+background-repeat: no-repeat;
+background-position: right 16px center;
+padding-right: 40px;
+transition: all 0.3s ease;
+}
+
+.day-select:focus {
+outline: none;
+border-color: rgba(255,255,255,0.5);
+background-color: rgba(255,255,255,0.15);
+}
+
+.day-select option {
+background: #1e3a5f;
+color: white;
+padding: 10px;
+}
+
+.cards {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+gap: 24px;
+}
+
+.card {
+background: rgba(255,255,255,0.1);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border: 1px solid rgba(255,255,255,0.2);
+border-radius: 24px;
+padding: 24px;
+box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+transition: all 0.3s ease;
+animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.card:hover {
+transform: translateY(-5px);
+box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+border-color: rgba(255,255,255,0.3);
+}
+
+.card-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+padding-bottom: 16px;
+border-bottom: 2px solid rgba(255,255,255,0.15);
+}
+
+.card h2 {
+font-size: 20px;
+font-weight: 600;
+margin: 0;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.shift-badge {
+font-size: 24px;
+}
+
+.count {
+background: linear-gradient(135deg, #e63946, #d62828);
+color: white;
+font-size: 14px;
+font-weight: 700;
+padding: 6px 14px;
+border-radius: 20px;
+min-width: 40px;
+text-align: center;
+}
+
+.employee-list {
+list-style: none;
+}
+
+.employee-item {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 14px 0;
+border-bottom: 1px solid rgba(255,255,255,0.08);
+transition: all 0.2s ease;
+}
+
+.employee-item:last-child {
+border-bottom: none;
+}
+
+.employee-item:hover {
+padding-left: 8px;
+background: rgba(255,255,255,0.05);
+border-radius: 8px;
+}
+
+.employee-info {
+flex: 1;
+}
+
+.employee-name {
+font-weight: 600;
+font-size: 15px;
+}
+
+.employee-role {
+font-weight: 400;
+font-size: 13px;
+color: rgba(255,255,255,0.6);
+margin-left: 8px;
+}
+
+.employee-shift {
+font-size: 12px;
+color: rgba(255,255,255,0.6);
+display: flex;
+align-items: center;
+gap: 6px;
+}
+
+.employee-time {
+font-size: 13px;
+font-weight: 600;
+padding: 6px 12px;
+border-radius: 8px;
+}
+
+.time-am {
+background: rgba(74, 222, 128, 0.2);
+color: #4ade80;
+}
+
+.time-pm {
+background: rgba(251, 191, 36, 0.2);
+color: #fbbf24;
+}
+
+.time-off {
+background: rgba(248, 113, 113, 0.2);
+color: #f87171;
+}
+
+.time-bw {
+background: rgba(139, 92, 246, 0.2);
+color: #a78bfa;
+}
+
+.no-results {
+text-align: center;
+padding: 60px 20px;
+color: rgba(255,255,255,0.5);
+}
+
+.no-results span {
+font-size: 64px;
+display: block;
+margin-bottom: 20px;
+}
+
+.no-results p {
+font-size: 18px;
+}
+
+.loading {
+text-align: center;
+padding: 60px 20px;
+}
+
+.loading-spinner {
+width: 50px;
+height: 50px;
+border: 4px solid rgba(255,255,255,0.2);
+border-top-color: white;
+border-radius: 50%;
+animation: spin 1s linear infinite;
+margin: 0 auto 20px;
+}
+
+@keyframes spin {
+to { transform: rotate(360deg); }
+}
+
+.search-results-section {
+margin-bottom: 30px;
+}
+
+.search-results-section h3 {
+font-size: 18px;
+margin-bottom: 20px;
+padding-bottom: 12px;
+border-bottom: 2px solid rgba(255,255,255,0.15);
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+@media (max-width: 768px) {
+body {
+padding: 20px 15px;
+}
+
+h1 {
+font-size: 28px;
+margin-bottom: 30px;
+}
+
+.controls {
+flex-direction: column;
+align-items: stretch;
+}
+
+.search-box, .day-select {
+min-width: 100%;
+}
+
+.cards {
+grid-template-columns: 1fr;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1><span>📅</span> Team Schedule</h1>
+
+<div class="nav-buttons">
+<a href="index.html" class="nav-btn nav-btn-secondary">← Back to Home</a>
+</div>
+
+<div class="controls">
+
+<div class="search-box">
+<input type="text" id="search" placeholder="Search employee by name...">
+</div>
+
+<select id="daySelect" class="day-select">
+<option value="">-- Select Day --</option>
+</select>
+
+</div>
+
+<div id="searchResultsSection" class="search-results-section" style="display: none;">
+<h3>🔍 Search Results</h3>
+<div id="searchCards" class="cards"></div>
+</div>
+
+<div id="cards" class="cards">
+<div class="loading">
+<div class="loading-spinner"></div>
+<p>Loading schedule...</p>
+</div>
+</div>
+
+</div>
+
+<script>
+
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQAzLqgdGOXKaiEatzK1KOw5Ne_6TKDeYiktjh-EaQsIURhnQ_GVcmxxdBiWq0C_4RW7Js8nog3v4X6/pub?output=csv";
+
+let scheduleData = {};
+let allEmployees = [];
+let daysList = [];
+
+fetch(sheetURL)
+.then(res => res.text())
+.then(text => {
+
+const rows = text.split("\n").map(r => r.split(","));
+
+if (rows.length < 2) {
+showNoData();
+return;
+}
+
+// Check if days are in first row (columns) or first column (rows)
+const firstRow = rows[0];
+const firstColumn = rows.map(r => r[0]);
+
+// Default to rows since user confirmed column A has days
+// Check to make sure
+const hasDaysInFirstRow = firstRow.slice(1).some(cell => {
+const trimmed = cell?.trim();
+return trimmed && (trimmed.toLowerCase().includes('day') || !isNaN(trimmed));
+});
+
+// Check if first column looks like days
+const hasDaysInFirstColumn = firstColumn.slice(1).some(cell => {
+const trimmed = cell?.trim();
+return trimmed && (trimmed.toLowerCase().includes('day') || !isNaN(trimmed));
+});
+
+// Default to rows (column A has days), but check if first row has days
+isDaysInRows = !hasDaysInFirstRow;
+
+if (isDaysInRows) {
+// Days are in rows - each row is a day
+initDaysFromRows(rows);
+} else {
+// Days are in columns - original behavior
+initDaysFromColumns(rows);
+}
+
+})
+.catch(err => {
+console.error('Error loading data:', err);
+showNoData();
+});
+
+function initDaysFromColumns(rows) {
+// Sheet structure:
+// Column A: Days (starting from row 3)
+// Row 1: Job titles (Manager/Agent) - starting from column B
+// Row 2: Names - starting from column B
+// Row 3+: Shift times for each person
+
+// Get days from column A, starting from row 3 (index 2)
+daysList = rows.slice(2).map(r => r[0]?.trim()).filter(d => d);
+
+if (daysList.length === 0) {
+showNoData();
+return;
+}
+
+// Get employee names from row 2, starting from column B (index 1)
+const employeeNames = rows[1]?.slice(1).map(n => n?.trim()).filter(n => n) || [];
+
+// Get job titles from row 1, starting from column B
+const jobTitles = rows[0]?.slice(1).map(j => j?.trim()).filter(j => j) || [];
+
+// Initialize schedule data for each day
+daysList.forEach(d => {
+scheduleData[d] = { Managers: [], Employees: [] };
+});
+
+// Process each employee (columns from B onwards)
+for (let col = 1; col < employeeNames.length + 1; col++) {
+const name = rows[1]?.[col]?.trim();
+const jobTitle = rows[0]?.[col]?.trim() || '';
+
+if (!name) continue;
+
+// Determine if this person is a manager based on job title
+const isManager = jobTitle.toLowerCase().includes('manager') || jobTitle === '';
+
+const employee = {
+name: name,
+isManager: isManager,
+shifts: {}
+};
+
+// Get shifts for this employee (rows 3 onwards)
+for (let dayIndex = 2; dayIndex < rows.length; dayIndex++) {
+const dayName = rows[dayIndex]?.[0]?.trim();
+if (!dayName) continue;
+
+const shift = rows[dayIndex]?.[col]?.trim();
+if (shift && shift !== '-') {
+employee.shifts[dayName] = shift;
+
+// Add to the appropriate array based on isManager
+if (isManager) {
+if (!scheduleData[dayName].Managers.find(e => e.name === name)) {
+scheduleData[dayName].Managers.push(employee);
+}
+} else {
+if (!scheduleData[dayName].Employees.find(e => e.name === name)) {
+scheduleData[dayName].Employees.push(employee);
+}
+}
+}
+}
+
+allEmployees.push(employee);
+}
+
+initDays(daysList);
+if (daysList.length > 0) {
+renderDay(daysList[0]);
+}
+}
+
+function initDaysFromRows(rows) {
+// Sheet structure:
+// Row 1 (index 0): Job titles (Manager/Agent) - columns B+
+// Row 2 (index 1): Names - columns B+
+// Column A (rows 3+): Days
+// Rows 3+ (columns B+): Shift times
+
+const DAY_START_ROW = 2;  // Start reading days from row 3 (index 2)
+
+// Get all days from first column (starting from row 3)
+daysList = rows.slice(DAY_START_ROW).map(r => r[0]?.trim()).filter(d => d);
+
+if (daysList.length === 0) {
+showNoData();
+return;
+}
+
+// Get employee names from row 2, starting from column B (index 1)
+const employeeNames = rows[1]?.slice(1).map(n => n?.trim()).filter(n => n) || [];
+
+// Get job titles from row 1, starting from column B
+const jobTitles = rows[0]?.slice(1).map(j => j?.trim()).filter(j => j) || [];
+
+// Initialize schedule data for each day
+daysList.forEach(d => {
+scheduleData[d] = { Managers: [], Employees: [] };
+});
+
+// Process each employee (columns from B onwards)
+for (let col = 1; col < employeeNames.length + 1; col++) {
+const name = rows[1]?.[col]?.trim();
+const jobTitle = rows[0]?.[col]?.trim() || '';
+
+if (!name) continue;
+
+// Determine if this person is a manager based on job title
+// Check for various forms of "manager" and similar roles
+const jobTitleLower = jobTitle.toLowerCase();
+const isManager = jobTitleLower.includes('manager') || 
+                  jobTitleLower.includes('manger') || 
+                  jobTitleLower.includes('chief') || 
+                  jobTitleLower.includes('supervisor') ||
+                  jobTitle === '';
+
+const employee = {
+name: name,
+isManager: isManager,
+jobTitle: jobTitle || (isManager ? 'manager' : 'agent'),
+shifts: {}
+};
+
+// Get shifts for this employee (rows 3 onwards)
+for (let dayIndex = DAY_START_ROW; dayIndex < rows.length; dayIndex++) {
+const dayName = rows[dayIndex]?.[0]?.trim();
+if (!dayName) continue;
+
+const shift = rows[dayIndex]?.[col]?.trim();
+if (shift && shift !== '-') {
+employee.shifts[dayName] = shift;
+
+// Add to the appropriate array based on isManager
+if (isManager) {
+if (!scheduleData[dayName].Managers.find(e => e.name === name)) {
+scheduleData[dayName].Managers.push(employee);
+}
+} else {
+if (!scheduleData[dayName].Employees.find(e => e.name === name)) {
+scheduleData[dayName].Employees.push(employee);
+}
+}
+}
+}
+
+allEmployees.push(employee);
+}
+
+initDays(daysList);
+if (daysList.length > 0) {
+renderDay(daysList[0]);
+}
+}
+
+function showNoData() {
+document.getElementById('cards').innerHTML = `
+<div class="no-results">
+<span>📊</span>
+<p>No schedule data available</p>
+</div>
+`;
+}
+
+function initDays(days) {
+const select = document.getElementById('daySelect');
+
+days.forEach(d => {
+const opt = document.createElement('option');
+opt.value = d;
+opt.textContent = 'Day ' + d;
+select.appendChild(opt);
+});
+
+select.onchange = () => {
+const selectedDay = select.value;
+if (selectedDay) {
+renderDay(selectedDay);
+clearSearch();
+}
+};
+}
+
+function renderDay(day) {
+const data = scheduleData[day];
+const cardsContainer = document.getElementById('cards');
+cardsContainer.innerHTML = '';
+
+if (!data) {
+cardsContainer.innerHTML = `
+<div class="no-results">
+<span>📅</span>
+<p>No employees scheduled for this day</p>
+</div>
+`;
+return;
+}
+
+// Get all people (managers + employees)
+const allPeople = [...(data.Managers || []), ...(data.Employees || [])];
+
+if (allPeople.length === 0) {
+cardsContainer.innerHTML = `
+<div class="no-results">
+<span>📅</span>
+<p>No employees scheduled for this day</p>
+</div>
+`;
+return;
+}
+
+// Group by shift: AM, PM, OFF, BW
+const amPeople = allPeople.filter(p => {
+const shift = p.shifts[day]?.toUpperCase() || '';
+return shift.includes('AM');
+});
+
+const pmPeople = allPeople.filter(p => {
+const shift = p.shifts[day]?.toUpperCase() || '';
+return shift.includes('PM');
+});
+
+const offPeople = allPeople.filter(p => {
+const shift = p.shifts[day]?.toUpperCase() || '';
+return shift === 'OFF' || shift === 'ANN';
+});
+
+const bwPeople = allPeople.filter(p => {
+const shift = p.shifts[day]?.toUpperCase() || '';
+return shift.includes('BW');
+});
+
+// Show cards for each shift that has people
+if (amPeople.length > 0) createShiftCard('🌅', 'AM Shift', amPeople, day);
+if (pmPeople.length > 0) createShiftCard('🌙', 'PM Shift', pmPeople, day);
+if (offPeople.length > 0) createShiftCard('🚫', 'OFF | ANN', offPeople, day);
+if (bwPeople.length > 0) createShiftCard('💼', 'BW Shift', bwPeople, day);
+}
+
+function createShiftCard(emoji, title, people, day) {
+const cardsContainer = document.getElementById('cards');
+
+const card = document.createElement('div');
+card.className = 'card';
+
+// Sort people: managers first, then by name
+const sortedPeople = [...people].sort((a, b) => {
+if (a.isManager && !b.isManager) return -1;
+if (!a.isManager && b.isManager) return 1;
+return a.name.localeCompare(b.name);
+});
+
+const employeeItems = sortedPeople.map(emp => {
+const isManager = emp.isManager;
+const role = emp.jobTitle || (isManager ? 'manager' : 'agent');
+
+return `
+<li class="employee-item">
+<div class="employee-name">${emp.name} <span class="employee-role">${role}</span></div>
+</li>
+`;
+}).join('');
+
+card.innerHTML = `
+<div class="card-header">
+<h2><span class="shift-badge">${emoji}</span> ${title} total ${people.length}</h2>
+</div>
+<ul class="employee-list">
+${employeeItems}
+</ul>
+`;
+
+cardsContainer.appendChild(card);
+}
+
+function clearSearch() {
+document.getElementById('search').value = '';
+document.getElementById('searchResultsSection').style.display = 'none';
+}
+
+document.getElementById('search').addEventListener('input', function() {
+const name = this.value.toLowerCase().trim();
+const searchResultsSection = document.getElementById('searchResultsSection');
+const searchCards = document.getElementById('searchCards');
+const mainCards = document.getElementById('cards');
+
+if (!name) {
+searchResultsSection.style.display = 'none';
+return;
+}
+
+const found = allEmployees.filter(emp => emp.name.toLowerCase().includes(name));
+
+if (found.length === 0) {
+searchResultsSection.style.display = 'block';
+searchCards.innerHTML = `
+<div class="no-results">
+<span>🔍</span>
+<p>No employees found matching "${this.value}"</p>
+</div>
+`;
+mainCards.innerHTML = '';
+return;
+}
+
+searchResultsSection.style.display = 'block';
+searchCards.innerHTML = '';
+mainCards.innerHTML = '';
+
+found.forEach(emp => {
+const card = document.createElement('div');
+card.className = 'card';
+
+const shiftEntries = Object.entries(emp.shifts);
+const employeeItems = shiftEntries.map(([day, shift]) => {
+let timeClass = 'time-off';
+let emoji = '🚫';
+
+const upperShift = shift.toUpperCase();
+if (upperShift === 'ANN' || upperShift === 'OFF') {
+timeClass = 'time-off';
+emoji = '🚫';
+} else if (upperShift.includes('AM')) {
+timeClass = 'time-am';
+emoji = '🌅';
+} else if (upperShift.includes('PM')) {
+timeClass = 'time-pm';
+emoji = '🌙';
+} else if (upperShift.includes('BW')) {
+timeClass = 'time-bw';
+emoji = '💼';
+}
+
+const isManager = emp.isManager;
+
+return `
+<li class="employee-item">
+<div class="employee-info">
+<div class="employee-name">Day ${day}</div>
+<div class="employee-shift">${isManager ? 'Manager' : 'Agent'} • ${shift}</div>
+</div>
+<div class="employee-time ${timeClass}">${emoji}</div>
+</li>
+`;
+}).join('');
+
+card.innerHTML = `
+<div class="card-header">
+<h2>👤 ${emp.name}</h2>
+<span class="count">${shiftEntries.length}</span>
+</div>
+<ul class="employee-list">
+${employeeItems}
+</ul>
+`;
+
+searchCards.appendChild(card);
+});
+
+const firstEmp = found[0];
+const firstDay = Object.keys(firstEmp.shifts)[0];
+if (firstDay) {
+document.getElementById('daySelect').value = firstDay;
+}
+});
+
+</script>
+
+</body>
+</html>

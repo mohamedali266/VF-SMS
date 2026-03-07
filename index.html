@@ -284,12 +284,68 @@ button {
     text-align: center;
     color: aliceblue;
 }
+
+/* Floating Labels */
+.input-wrapper {
+    position: relative;
+    margin-bottom: 14px;
+}
+
+.input-wrapper input {
+    margin-bottom: 0;
+}
+
+.input-wrapper .floating-label {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    font-family: inherit;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    opacity: 1;
+}
+
+/* For inputs with default values, show label above */
+.input-wrapper input.has-value + .floating-label,
+.input-wrapper input:focus + .floating-label,
+.input-wrapper input:not(:placeholder-shown) + .floating-label {
+    top: -8px;
+    left: 12px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(214, 40, 40, 0.8);
+    padding: 2px 8px;
+    border-radius: 4px;
+    opacity: 1;
+}
+
+.input-wrapper input::placeholder {
+    color: transparent;
+}
+
+.input-wrapper input:not(:placeholder-shown)::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
 </style>
 </head>
 <body>
 
 <div class="container">
 <h2>📊 Daily SMS Report</h2>
+<div style="text-align:center;margin-bottom:20px">
+
+<a href="schedule.html">
+
+<button class="btn-secondary">
+View Schedules
+</button>
+
+</a>
+
+</div>
 <h3>Director by : Mohamed Ali ❤</h3> <!-- -->
 <h5 class="store-c">Amerya koubry Store ❤</h5>
 
@@ -309,11 +365,11 @@ button {
 <div id="template2_inputs">
 <h3>Voice Calculation</h3>
 <div class="input-grid">
-<input type="number" id="flex45" placeholder="Flex45">
-<input type="number" id="flex70" placeholder="Flex70">
-<input type="number" id="flex100" placeholder="Flex100">
-<input type="number" id="red" placeholder="Red New">
-<input type="number" id="vmt" placeholder="VMT Active Wallet">
+<div class="input-wrapper"><input type="number" id="flex45" placeholder=" "><span class="floating-label">Flex45</span></div>
+<div class="input-wrapper"><input type="number" id="flex70" placeholder=" "><span class="floating-label">Flex70</span></div>
+<div class="input-wrapper"><input type="number" id="flex100" placeholder=" "><span class="floating-label">Flex100</span></div>
+<div class="input-wrapper"><input type="number" id="red" placeholder=" "><span class="floating-label">Red New</span></div>
+<div class="input-wrapper"><input type="number" id="vmt" placeholder=" "><span class="floating-label">VMT Active Wallet</span></div>
 </div>
 
 <div class="result">
@@ -321,20 +377,24 @@ Voice Points: <span id="voice_total">0</span> |
 Achievement: <span id="voice_percent">0%</span>
 </div>
 
+<div class="result">
+Consumer Voice: <span id="consumer_voice_total">0</span>
+</div>
+
 <h3>Other Inputs</h3>
 <div class="input-grid">
-<input type="number" id="voice_required" placeholder="Voice Points Required" value="850">
-<input type="number" id="consumer_ach" placeholder="Consumer Voice Ach">
-<input type="number" id="consumer_required" placeholder="Consumer Voice Required" value="80">
-<input type="number" id="terminal_ach" placeholder="Terminal Points Ach">
-<input type="number" id="terminal_required" placeholder="Terminal Points Required" value="0">
-<input type="number" id="adsl_ach" placeholder="ADSL Ach">
-<input type="number" id="adsl_required" placeholder="ADSL Required" value="0">
-<input type="number" id="wallet_required" placeholder="Active Wallet Required" value="0">
-<input type="number" id="red_conversion" placeholder="Red Conversion">
-<input type="number" id="mnp_pre" placeholder="MNP Prepaid">
-<input type="number" id="mnp_post" placeholder="MNP Postpaid">
-<input type="number" id="enterprise" placeholder="Enterprise">
+<div class="input-wrapper"><input type="number" id="voice_required" placeholder=" " value="850"><span class="floating-label">Voice Points Required</span></div>
+<div class="input-wrapper"><input type="number" id="consumer_ach" placeholder=" "><span class="floating-label">Consumer Voice Ach</span></div>
+<div class="input-wrapper"><input type="number" id="consumer_required" placeholder=" " value="80"><span class="floating-label">Consumer Voice Required</span></div>
+<div class="input-wrapper"><input type="number" id="terminal_ach" placeholder=" "><span class="floating-label">Terminal Points Ach</span></div>
+<div class="input-wrapper"><input type="number" id="terminal_required" placeholder=" " value="0"><span class="floating-label">Terminal Points Required</span></div>
+<div class="input-wrapper"><input type="number" id="adsl_ach" placeholder=" "><span class="floating-label">ADSL Ach</span></div>
+<div class="input-wrapper"><input type="number" id="adsl_required" placeholder=" " value="0"><span class="floating-label">ADSL Required</span></div>
+<div class="input-wrapper"><input type="number" id="wallet_required" placeholder=" " value="0"><span class="floating-label">Active Wallet Required</span></div>
+<div class="input-wrapper"><input type="number" id="red_conversion" placeholder=" "><span class="floating-label">Red Conversion</span></div>
+<div class="input-wrapper"><input type="number" id="mnp_pre" placeholder=" "><span class="floating-label">MNP Prepaid</span></div>
+<div class="input-wrapper"><input type="number" id="mnp_post" placeholder=" "><span class="floating-label">MNP Postpaid</span></div>
+<div class="input-wrapper"><input type="number" id="enterprise" placeholder=" "><span class="floating-label">Enterprise</span></div>
 </div>
 </div>
 
@@ -342,26 +402,26 @@ Achievement: <span id="voice_percent">0%</span>
 <div id="template1_inputs" style="display:none">
 <h3>VP / GA / EP / Connectivity</h3>
 <div class="input-grid">
-<input type="number" id="vp_target" placeholder="VP Target" value="850">
-<input type="number" id="vp_ach" placeholder="VP Achievement">
-<input type="number" id="ga_voice_target" placeholder="GA Voice Target" value="80">
-<input type="number" id="ga_voice_ach" placeholder="GA Voice Ach">
-<input type="number" id="adsl_target" placeholder="ADSL Target">
-<input type="number" id="adsl_ach" placeholder="ADSL Ach">
-<input type="number" id="con_target" placeholder="Connectivity Target">
-<input type="number" id="con_ach" placeholder="Connectivity Ach">
-<input type="number" id="ep_ga_target" placeholder="EP GA Target">
-<input type="number" id="ep_ga_ach" placeholder="EP GA Ach">
-<input type="number" id="ep_p_target" placeholder="EP P Target">
-<input type="number" id="ep_p_ach" placeholder="EP P Ach">
-<input type="number" id="red_target1" placeholder="Red Target">
-<input type="number" id="red_ach1" placeholder="Red Achievement">
-<input type="number" id="terminal_target1" placeholder="Terminal Target">
-<input type="number" id="terminal_ach1" placeholder="Terminal Ach">
-<input type="number" id="vmt1" placeholder="VMT Wallet" value="53">
-<input type="text" id="contracts_name" placeholder="Contracts & Sim Swap Form Name" value="m.ali">
-<input type="number" id="mnp1" placeholder="MNP">
-<input type="number" id="trx1" placeholder="TRX">
+<div class="input-wrapper"><input type="number" id="vp_target" placeholder=" " value="850"><span class="floating-label">VP Target</span></div>
+<div class="input-wrapper"><input type="number" id="vp_ach" placeholder=" "><span class="floating-label">VP Achievement</span></div>
+<div class="input-wrapper"><input type="number" id="ga_voice_target" placeholder=" " value="80"><span class="floating-label">GA Voice Target</span></div>
+<div class="input-wrapper"><input type="number" id="ga_voice_ach" placeholder=" "><span class="floating-label">GA Voice Ach</span></div>
+<div class="input-wrapper"><input type="number" id="adsl_target" placeholder=" "><span class="floating-label">ADSL Target</span></div>
+<div class="input-wrapper"><input type="number" id="adsl_ach" placeholder=" "><span class="floating-label">ADSL Ach</span></div>
+<div class="input-wrapper"><input type="number" id="con_target" placeholder=" "><span class="floating-label">Connectivity Target</span></div>
+<div class="input-wrapper"><input type="number" id="con_ach" placeholder=" "><span class="floating-label">Connectivity Ach</span></div>
+<div class="input-wrapper"><input type="number" id="ep_ga_target" placeholder=" "><span class="floating-label">EP GA Target</span></div>
+<div class="input-wrapper"><input type="number" id="ep_ga_ach" placeholder=" "><span class="floating-label">EP GA Ach</span></div>
+<div class="input-wrapper"><input type="number" id="ep_p_target" placeholder=" "><span class="floating-label">EP P Target</span></div>
+<div class="input-wrapper"><input type="number" id="ep_p_ach" placeholder=" "><span class="floating-label">EP P Ach</span></div>
+<div class="input-wrapper"><input type="number" id="red_target1" placeholder=" "><span class="floating-label">Red Target</span></div>
+<div class="input-wrapper"><input type="number" id="red_ach1" placeholder=" "><span class="floating-label">Red Achievement</span></div>
+<div class="input-wrapper"><input type="number" id="terminal_target1" placeholder=" "><span class="floating-label">Terminal Target</span></div>
+<div class="input-wrapper"><input type="number" id="terminal_ach1" placeholder=" "><span class="floating-label">Terminal Ach</span></div>
+<div class="input-wrapper"><input type="number" id="vmt1" placeholder=" " value="53"><span class="floating-label">VMT Wallet</span></div>
+<div class="input-wrapper"><input type="text" id="contracts_name" placeholder=" " value="m.ali"><span class="floating-label">Contracts & Sim Swap Form Name</span></div>
+<div class="input-wrapper"><input type="number" id="mnp1" placeholder=" "><span class="floating-label">MNP</span></div>
+<div class="input-wrapper"><input type="number" id="trx1" placeholder=" "><span class="floating-label">TRX</span></div>
 </div>
 </div>
 
@@ -384,10 +444,12 @@ templateSelect.addEventListener("change", ()=>{
     if(templateSelect.value=="template1"){
         template1Div.style.display="block";
         template2Div.style.display="none";
+        autoFillTemplate2();
     } else {
         template1Div.style.display="block";
         template2Div.style.display="block";
         template1Div.style.display="none";
+        calculateVoice2();
     }
     generateMessage();
 });
@@ -398,8 +460,21 @@ document.getElementById("date").valueAsDate = new Date();
 // ===== Inputs & Auto Save =====
 const allInputs = document.querySelectorAll("input");
 allInputs.forEach(input=>{
+    // Add has-value class when user starts typing
+    input.addEventListener('input', function() {
+        if(this.value) {
+            this.classList.add('has-value');
+        } else {
+            this.classList.remove('has-value');
+        }
+    });
+    
     input.addEventListener("input", ()=>{
-        if(templateSelect.value=="template2") calculateVoice2();
+        if(templateSelect.value=="template2") {
+            calculateVoice2();
+        } else if(templateSelect.value=="template1") {
+            autoFillTemplate2();
+        }
         generateMessage();
         saveData();
     });
@@ -415,7 +490,11 @@ window.onload = function(){
             }
         });
     }
-    if(templateSelect.value=="template2") calculateVoice2();
+    if(templateSelect.value=="template2") {
+        calculateVoice2();
+    } else if(templateSelect.value=="template1") {
+        autoFillTemplate2();
+    }
     generateMessage();
 };
 
@@ -436,8 +515,18 @@ function calculateVoice2(){
     const vmt = +document.getElementById("vmt").value || 0;
     const required = +document.getElementById("voice_required").value || 0;
 
-    const total = (f45*2)+(f70*6)+(f100*8)+(red*40)+(vmt*5);
+    // Voice Points = flex45*7 + flex70*11 + flex100*13 + red*40 (no VMT)
+    const total = (f45 * 7) + (f70 * 11) + (f100 * 13) + (red * 40);
     document.getElementById("voice_total").innerText = total;
+
+    // Consumer Voice = total of flex + red (no vmt)
+    const consumerVoice = f45 + f70 + f100 + red;
+    document.getElementById("consumer_voice_total").innerText = consumerVoice;
+    
+    // Auto-fill Consumer Voice Ach field with calculated value
+    if(consumerVoice > 0) {
+        document.getElementById("consumer_ach").value = consumerVoice;
+    }
 
     let percent = 0;
     if(required>0) percent=((total/required)*100).toFixed(1);
@@ -448,7 +537,66 @@ function calculateVoice2(){
     if(percent>=100) percentEl.classList.add("green");
     else if(percent>=70) percentEl.classList.add("orange");
     else percentEl.classList.add("red");
+    
+    // Auto-fill Template 1 fields from Template 2
+    autoFillTemplate1(total, consumerVoice);
+    
     return total;
+}
+
+// ===== Auto-fill Template 1 from Template 2 =====
+function autoFillTemplate1(voicePoints, consumerVoice) {
+    const red = +document.getElementById("red").value || 0;
+    const redConversion = +document.getElementById("red_conversion").value || 0;
+    const mnpPre = +document.getElementById("mnp_pre").value || 0;
+    const mnpPost = +document.getElementById("mnp_post").value || 0;
+    const vmt = +document.getElementById("vmt").value || 0;
+    const adsl = document.getElementById("adsl_ach").value;
+    const terminal = document.getElementById("terminal_ach").value;
+
+    // Fill VP daily Ach = Voice Points
+    document.getElementById("vp_ach").value = voicePoints;
+    
+    // Fill GA Voice Ach = Consumer Voice
+    document.getElementById("ga_voice_ach").value = consumerVoice;
+    
+    // Fill Terminal Ach from Template 2
+    if(terminal) document.getElementById("terminal_ach1").value = terminal;
+    
+    // Fill ADSL GA Ach from Template 2
+    if(adsl) document.getElementById("adsl_ach").value = adsl;
+    
+    // Fill VMT wallet
+    document.getElementById("vmt1").value = vmt;
+    
+    // Fill Red Achievement = Red New + Red Conversion
+    document.getElementById("red_ach1").value = red + redConversion;
+    
+    // Fill MNP = MNP prepaid + MNP postpaid
+    document.getElementById("mnp1").value = mnpPre + mnpPost;
+}
+
+// ===== Auto-fill Template 2 from Template 1 =====
+function autoFillTemplate2() {
+    const vpAch = +document.getElementById("vp_ach").value || 0;
+    const gaVoiceAch = +document.getElementById("ga_voice_ach").value || 0;
+    const terminalAch1 = document.getElementById("terminal_ach1").value;
+    const adslAch1 = document.getElementById("adsl_ach").value;
+    const vmt1 = document.getElementById("vmt1").value;
+    const redTarget1 = document.getElementById("red_target1").value;
+    const mnp1 = document.getElementById("mnp1").value;
+
+    // Fill Consumer Voice Ach in Template 2
+    document.getElementById("consumer_ach").value = gaVoiceAch;
+    
+    // Fill Terminal Ach in Template 2
+    if(terminalAch1) document.getElementById("terminal_ach").value = terminalAch1;
+    
+    // Fill ADSL Ach in Template 2
+    if(adslAch1) document.getElementById("adsl_ach").value = adslAch1;
+    
+    // Fill VMT in Template 2
+    if(vmt1) document.getElementById("vmt").value = vmt1;
 }
 
 // ===== Generate Message =====
@@ -459,14 +607,18 @@ function generateMessage(){
     let message="";
     if(templateSelect.value=="template2"){
         const voiceAch = calculateVoice2();
-        function val(id){return document.getElementById(id).value||"";}
+        const consumerVoice = document.getElementById("consumer_voice_total").innerText;
+        function val(id){
+            const v = document.getElementById(id).value;
+            return (v === "" || v === null || v === undefined) ? "" : v;
+        }
         message=`${store}
 ${date}
 
 Voice points daily ach :${voiceAch}
 Voice points required : ${val("voice_required")}
 
-Consumer voice daily ach : ${val("consumer_ach")}
+Consumer voice daily ach : ${consumerVoice}
 Consumer voice daily required : ${val("consumer_required")}
 Terminals points ac : ${val("terminal_ach")}
 Terminal points  required : ${val("terminal_required")}
@@ -481,7 +633,28 @@ MNP prepaid : ${val("mnp_pre")}
 MNP postpaid : ${val("mnp_post")}
 Enterprise : ${val("enterprise")}`;
     } else {
-        function val(id){return document.getElementById(id).value||"";}
+        // Auto-calculate for Template 1
+        autoFillTemplate2();
+        
+        function val(id){
+            const v = document.getElementById(id).value;
+            return (v === "" || v === null || v === undefined) ? "" : v;
+        }
+        
+        // Get calculated values
+        const redNew = +document.getElementById("red").value || 0;
+        const redConv = +document.getElementById("red_conversion").value || 0;
+        const mnpPre = +document.getElementById("mnp_pre").value || 0;
+        const mnpPost = +document.getElementById("mnp_post").value || 0;
+        
+        // Calculate Red Achievement and MNP if not already filled
+        if(!document.getElementById("red_ach1").value) {
+            document.getElementById("red_ach1").value = redNew + redConv;
+        }
+        if(!document.getElementById("mnp1").value) {
+            document.getElementById("mnp1").value = mnpPre + mnpPost;
+        }
+        
         message=`${store}
 ${date}
 
@@ -529,7 +702,11 @@ function clearToday(){
         if(input.defaultValue) input.value=input.defaultValue;
         else input.value="";
     });
-    if(templateSelect.value=="template2") calculateVoice2();
+    if(templateSelect.value=="template2") {
+        calculateVoice2();
+    } else if(templateSelect.value=="template1") {
+        autoFillTemplate2();
+    }
     generateMessage();
     saveData();
 }
