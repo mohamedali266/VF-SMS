@@ -4,400 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="img/vf_icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="img/vf_icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>CST Data - VF SMS</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #d62828 0%, #b91c1c 30%, #991b1b 60%, #7f1d1d 100%);
-    background-attachment: fixed;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-}
-
-.container {
-    max-width: 750px;
-    width: 100%;
-    margin: 20px auto;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 24px;
-    padding: 32px;
-    box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-h2 {
-    color: white;
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 24px;
-    text-align: center;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    letter-spacing: -0.5px;
-}
-
-h3 {
-    color: rgba(255, 255, 255, 0.95);
-    font-size: 16px;
-    font-weight: 600;
-    margin: 20px 0 14px 0;
-    padding-bottom: 8px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-    letter-spacing: 0.5px;
-}
-
-label {
-    display: block;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 6px;
-    letter-spacing: 0.3px;
-}
-
-input, select, textarea {
-    width: 100%;
-    padding: 14px 16px;
-    margin-bottom: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 12px;
-    font-size: 14px;
-    font-family: inherit;
-    background: rgba(255, 255, 255, 0.12);
-    color: white;
-    transition: all 0.3s ease;
-    outline: none;
-}
-
-input::placeholder, textarea::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-input:focus, select:focus, textarea:focus {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
-}
-
-select {
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    padding-right: 40px;
-}
-
-select option {
-    background: #667eea;
-    color: white;
-}
-
-textarea {
-    height: 120px;
-    resize: vertical;
-    font-size: 13px;
-    line-height: 1.6;
-}
-
-.button-group {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-}
-
-button {
-    flex: 1;
-    min-width: 140px;
-    padding: 14px 24px;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    font-family: inherit;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    letter-spacing: 0.3px;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #e63946 0%, #d62828 50%, #b91c1c 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(214, 40, 40, 0.4);
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(214, 40, 40, 0.5);
-}
-
-.btn-secondary {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px);
-}
-
-.btn-whatsapp {
-    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
-}
-
-.btn-whatsapp:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
-}
-
-.btn-call {
-    background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
-}
-
-.btn-call:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(33, 150, 243, 0.5);
-}
-
-.input-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-}
-
-.input-full {
-    grid-column: 1 / -1;
-}
-
-/* Customer List Styles */
-.table-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    margin-top: 20px;
-}
-
-/* Scroll hint - hidden on desktop, shown on mobile */
-.scroll-hint {
-    display: none;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 11px;
-    padding: 8px;
-}
-
-.customer-table {
-    width: 100%;
-    min-width: 600px;
-    border-collapse: collapse;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.customer-table th,
-.customer-table td {
-    padding: 12px;
-    text-align: left;
-    color: white;
-    font-size: 13px;
-}
-
-.customer-table th {
-    background: rgba(255, 255, 255, 0.2);
-    font-weight: 600;
-}
-
-.customer-table tr {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.customer-table tr:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.status-badge {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-.status-pending {
-    background: rgba(251, 191, 36, 0.3);
-    color: #fbbf24;
-}
-
-.status-completed {
-    background: rgba(74, 222, 128, 0.3);
-    color: #4ade80;
-}
-
-.status-cancelled {
-    background: rgba(248, 113, 113, 0.3);
-    color: #f87171;
-}
-
-.action-btns {
-    display: flex;
-    gap: 8px;
-}
-
-.action-btns button {
-    padding: 6px 12px;
-    min-width: auto;
-    font-size: 12px;
-}
-
-.delete-btn {
-    background: rgba(248, 113, 113, 0.3);
-    color: #f87171;
-    border: 1px solid rgba(248, 113, 113, 0.5);
-}
-
-.delete-btn:hover {
-    background: rgba(248, 113, 113, 0.5);
-}
-
-.edit-btn {
-    background: rgba(251, 191, 36, 0.3);
-    color: #fbbf24;
-    border: 1px solid rgba(251, 191, 36, 0.5);
-}
-
-.edit-btn:hover {
-    background: rgba(251, 191, 36, 0.5);
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-    body {
-        padding: 12px;
-    }
-
-    .container {
-        padding: 20px;
-        margin: 10px auto;
-        border-radius: 20px;
-    }
-
-    h2 {
-        font-size: 22px;
-        margin-bottom: 20px;
-    }
-
-    input, select, textarea {
-        padding: 12px 14px;
-        font-size: 14px;
-        border-radius: 10px;
-    }
-
-    .input-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .button-group {
-        flex-direction: column;
-    }
-
-    button {
-        width: 100%;
-    }
-
-    .customer-table {
-        font-size: 11px;
-    }
-
-    .customer-table th,
-    .customer-table td {
-        padding: 8px;
-    }
-
-    .action-btns {
-        flex-direction: column;
-    }
-
-    .scroll-hint {
-        display: block;
-    }
-}
-
-/* Animation */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.container {
-    animation: fadeIn 0.5s ease-out;
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.4);
-}
-
-.nav-links {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-.nav-links a button {
-    flex: none;
-}
-</style>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
 <div class="container">
     <h2>👥 CST Data</h2>
-    
-    <div class="nav-links">
-        <a href="index.html">
-            <button class="btn-secondary">📊 Daily SMS</button>
-        </a>
-        <a href="schedule.html">
-            <button class="btn-secondary">📅 Schedules</button>
-        </a>
-        <a href="todo.html">
-            <button class="btn-secondary">📋 ToDo List</button>
-        </a>
-    </div>
 
     <h3>➕ Add New Customer</h3>
     <div class="input-grid">
@@ -442,24 +59,16 @@ button {
     </div>
 
     <h3>📋 Customers List</h3>
-    <div class="table-wrapper">
-        <div class="scroll-hint">← Scroll →</div>
-        <div id="customerList">
-            <table class="customer-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Service</th>
-                    <th>Status</th>
-                    <th>Notes</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="customerTableBody">
-            </tbody>
-        </table>
+    <div class="cards-grid" id="customerCards">
     </div>
+</div>
+
+<!-- Customer Detail Modal -->
+<div class="modal" id="customerModal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <div class="modal-body" id="modalBody">
+        </div>
     </div>
 </div>
 
@@ -468,11 +77,11 @@ button {
 let customers = JSON.parse(localStorage.getItem('cstCustomers')) || [];
 
 function renderCustomers() {
-    const tbody = document.getElementById('customerTableBody');
-    tbody.innerHTML = '';
+    const container = document.getElementById('customerCards');
+    container.innerHTML = '';
 
     if (customers.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:rgba(255,255,255,0.5)">No customers yet</td></tr>';
+        container.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.5);grid-column:1/-1;padding:40px">No customers yet</div>';
         return;
     }
 
@@ -482,24 +91,88 @@ function renderCustomers() {
         else if (customer.status === 'Cancelled') statusClass = 'status-cancelled';
         else statusClass = 'status-pending';
 
-        const row = `
-            <tr>
-                <td>${customer.name}</td>
-                <td>${customer.phone}</td>
-                <td>${customer.service}</td>
-                <td><span class="status-badge ${statusClass}">${customer.status}</span></td>
-                <td>${customer.notes || '-'}</td>
-                <td class="action-btns">
-                    <button class="btn-whatsapp" onclick="sendWhatsApp('${customer.phone}')">💬</button>
-                    <button class="btn-call" onclick="makeCall('${customer.phone}')">📞</button>
-                    <button class="edit-btn" onclick="editCustomer(${index})">✏️</button>
-                    <button class="delete-btn" onclick="deleteCustomer(${index})">🗑️</button>
-                </td>
-            </tr>
+        const cardDate = customer.date ? new Date(customer.date).toLocaleDateString() : '-';
+
+        const card = `
+            <div class="customer-card" onclick="showCustomerDetail(${index})">
+                <div class="card-header">
+                    <div>
+                        <h4 class="card-name">${customer.name}</h4>
+                        <p class="card-phone">${customer.phone}</p>
+                    </div>
+                    <span class="status-badge ${statusClass}">${customer.status}</span>
+                </div>
+                <span class="card-service">${customer.service}</span>
+                <div class="card-footer">
+                    <span class="card-date">${cardDate}</span>
+                    <div class="action-btns" onclick="event.stopPropagation()">
+                        <button class="btn-whatsapp" onclick="sendWhatsApp('${customer.phone}')">💬</button>
+                        <button class="btn-call" onclick="makeCall('${customer.phone}')">📞</button>
+                        <button class="edit-btn" onclick="editCustomer(${index})">✏️</button>
+                        <button class="delete-btn" onclick="deleteCustomer(${index})">🗑️</button>
+                    </div>
+                </div>
+            </div>
         `;
-        tbody.innerHTML += row;
+        container.innerHTML += card;
     });
 }
+
+function showCustomerDetail(index) {
+    const customer = customers[index];
+    let statusClass = '';
+    if (customer.status === 'Completed') statusClass = 'status-completed';
+    else if (customer.status === 'Cancelled') statusClass = 'status-cancelled';
+    else statusClass = 'status-pending';
+
+    const cardDate = customer.date ? new Date(customer.date).toLocaleDateString() : '-';
+    const cardTime = customer.date ? new Date(customer.date).toLocaleTimeString() : '-';
+
+    document.getElementById('modalBody').innerHTML = `
+        <div class="modal-header">
+            <div>
+                <h3 class="modal-title">${customer.name}</h3>
+                <p class="modal-subtitle">${customer.phone}</p>
+            </div>
+            <span class="status-badge ${statusClass}">${customer.status}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Service Type</span>
+            <span class="detail-value">${customer.service}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Date Added</span>
+            <span class="detail-value">${cardDate}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Time</span>
+            <span class="detail-value">${cardTime}</span>
+        </div>
+        <div class="detail-notes">
+            <div class="detail-notes-label">Notes</div>
+            <div class="detail-notes-text">${customer.notes || 'No notes'}</div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-whatsapp" onclick="sendWhatsApp('${customer.phone}');closeModal()">💬 WhatsApp</button>
+            <button class="btn-call" onclick="makeCall('${customer.phone}');closeModal()">📞 Call</button>
+        </div>
+        <div class="modal-actions">
+            <button class="edit-btn" onclick="editCustomer(${index});closeModal()">✏️ Edit</button>
+            <button class="delete-btn" onclick="deleteCustomer(${index});closeModal()">🗑️ Delete</button>
+        </div>
+    `;
+    document.getElementById('customerModal').classList.add('active');
+}
+
+function closeModal() {
+    document.getElementById('customerModal').classList.remove('active');
+}
+
+document.getElementById('customerModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
 
 function saveCustomer() {
     const name = document.getElementById('customerName').value;
@@ -627,6 +300,32 @@ inputs.forEach(input => {
 // Initial render
 renderCustomers();
 </script>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-items">
+        <a href="index.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-paper-plane"></i>
+            <span class="nav-label">SMS</span>
+        </a>
+        <a href="cst.html" class="nav-item active">
+            <i class="nav-icon fa-solid fa-users"></i>
+            <span class="nav-label">CST</span>
+        </a>
+        <a href="sr-sku.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-list-ol"></i>
+            <span class="nav-label">SR & SKU</span>
+        </a>
+        <a href="schedule.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-calendar-days"></i>
+            <span class="nav-label">Schedule</span>
+        </a>
+        <a href="todo.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-clipboard-list"></i>
+            <span class="nav-label">ToDo</span>
+        </a>
+    </div>
+</nav>
 
 </body>
 </html>

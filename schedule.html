@@ -3,418 +3,222 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Team Schedule</title>
 <link rel="icon" href="img/vf_icon.svg" type="image/svg+xml">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" href="img/vf_icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Team Schedule</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-
-* {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
+/* Schedule Page Specific Styles */
+.week-picker {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
 }
 
-body {
-font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-min-height: 100vh;
-background: linear-gradient(135deg, #d62828 0%, #b91c1c 30%, #991b1b 60%, #7f1d1d 100%);
-background-attachment: fixed;
-padding: 20px;
-display: flex;
-justify-content: center;
-align-items: flex-start;
+.week-btn {
+    padding: 10px 20px;
+    border: 2px solid var(--vf-red);
+    background: var(--white);
+    color: var(--vf-red);
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.container {
-max-width: 1200px;
-width: 100%;
-margin: 20px auto;
-background: rgba(255, 255, 255, 0.15);
-backdrop-filter: blur(20px);
--webkit-backdrop-filter: blur(20px);
-border: 1px solid rgba(255, 255, 255, 0.3);
-border-radius: 24px;
-padding: 32px;
-box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+.week-btn.active {
+    background: var(--vf-red);
+    color: white;
 }
 
-h1 {
-text-align: center;
-margin-bottom: 30px;
-font-size: 32px;
-font-weight: 700;
-letter-spacing: -0.5px;
-text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-h1 span {
-display: inline-block;
-animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-0%, 100% { transform: scale(1); }
-50% { transform: scale(1.05); }
-}
-
-.nav-buttons {
-display: flex;
-justify-content: center;
-gap: 12px;
-margin-bottom: 24px;
-}
-
-.nav-btn {
-padding: 12px 24px;
-border: none;
-border-radius: 12px;
-font-size: 14px;
-font-weight: 600;
-font-family: inherit;
-cursor: pointer;
-transition: all 0.3s ease;
-text-decoration: none;
-display: inline-block;
-}
-
-.nav-btn-primary {
-background: linear-gradient(135deg, #e63946 0%, #d62828 50%, #b91c1c 100%);
-color: white;
-box-shadow: 0 4px 15px rgba(214, 40, 40, 0.4);
-}
-
-.nav-btn-primary:hover {
-transform: translateY(-2px);
-box-shadow: 0 6px 20px rgba(214, 40, 40, 0.5);
-}
-
-.nav-btn-secondary {
-background: rgba(255, 255, 255, 0.2);
-color: white;
-border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.nav-btn-secondary:hover {
-background: rgba(255, 255, 255, 0.3);
-transform: translateY(-2px);
-}
-
-.controls {
-display: flex;
-gap: 20px;
-justify-content: center;
-margin-bottom: 40px;
-flex-wrap: wrap;
-}
-
-.search-box {
-position: relative;
-flex: 1;
-max-width: 400px;
-min-width: 280px;
-}
-
-.search-box input {
-width: 100%;
-padding: 16px 20px;
-padding-left: 50px;
-border-radius: 16px;
-border: 2px solid rgba(255,255,255,0.2);
-background: rgba(255,255,255,0.1);
-backdrop-filter: blur(10px);
-color: white;
-font-size: 16px;
-font-family: inherit;
-transition: all 0.3s ease;
-}
-
-.search-box input::placeholder {
-color: rgba(255,255,255,0.5);
-}
-
-.search-box input:focus {
-outline: none;
-border-color: rgba(255,255,255,0.5);
-background: rgba(255,255,255,0.15);
-box-shadow: 0 0 20px rgba(255,255,255,0.1);
-}
-
-.search-box::before {
-content: "🔍";
-position: absolute;
-left: 18px;
-top: 50%;
-transform: translateY(-50%);
-font-size: 18px;
+.week-btn:hover:not(.active) {
+    background: rgba(214, 40, 40, 0.1);
 }
 
 .day-select {
-min-width: 200px;
-padding: 16px 20px;
-border-radius: 16px;
-border: 2px solid rgba(255,255,255,0.2);
-background: rgba(255,255,255,0.1);
-backdrop-filter: blur(10px);
-color: white;
-font-size: 16px;
-font-family: inherit;
-cursor: pointer;
-appearance: none;
-background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
-background-repeat: no-repeat;
-background-position: right 16px center;
-padding-right: 40px;
-transition: all 0.3s ease;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 24px;
+    display: block;
+    padding: 14px 20px;
+    border-radius: 12px;
+    border: 2px solid var(--white-border);
+    background: var(--white);
+    color: var(--vf-red-dark);
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23d62828' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
 }
 
-.day-select:focus {
-outline: none;
-border-color: rgba(255,255,255,0.5);
-background-color: rgba(255,255,255,0.15);
+.search-box {
+    margin-bottom: 24px;
 }
 
-.day-select option {
-background: #1e3a5f;
-color: white;
-padding: 10px;
+.search-input {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    display: block;
+    padding: 14px 20px;
+    padding-left: 48px;
+    border-radius: 12px;
+    border: 2px solid var(--white-border);
+    background: var(--white);
+    color: var(--vf-red-dark);
+    font-size: 14px;
+    font-family: inherit;
+    transition: all 0.3s ease;
 }
 
-.cards {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-gap: 24px;
+.search-input::placeholder {
+    color: #999;
 }
 
-.card {
-background: rgba(255,255,255,0.1);
-backdrop-filter: blur(20px);
--webkit-backdrop-filter: blur(20px);
-border: 1px solid rgba(255,255,255,0.2);
-border-radius: 24px;
-padding: 24px;
-box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-transition: all 0.3s ease;
-animation: fadeIn 0.5s ease-out;
+.search-input:focus {
+    outline: none;
+    border-color: var(--vf-red);
+    box-shadow: 0 0 0 3px rgba(214, 40, 40, 0.15);
 }
 
-@keyframes fadeIn {
-from { opacity: 0; transform: translateY(20px); }
-to { opacity: 1; transform: translateY(0); }
+.search-input::before {
+    content: "\f002";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
 }
 
-.card:hover {
-transform: translateY(-5px);
-box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-border-color: rgba(255,255,255,0.3);
+.employee-card {
+    background: var(--white);
+    border: 2px solid var(--white-border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.card-header {
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin-bottom: 20px;
-padding-bottom: 16px;
-border-bottom: 2px solid rgba(255,255,255,0.15);
+.employee-card:hover {
+    border-color: var(--vf-red);
+    box-shadow: 0 8px 25px rgba(214, 40, 40, 0.15);
 }
 
-.card h2 {
-font-size: 20px;
-font-weight: 600;
-margin: 0;
-display: flex;
-align-items: center;
-gap: 10px;
+.employee-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--vf-red);
 }
 
-.shift-badge {
-font-size: 24px;
+.employee-card h2 {
+    color: var(--vf-red);
+    font-size: 18px;
+    margin: 0;
 }
 
-.count {
-background: linear-gradient(135deg, #e63946, #d62828);
-color: white;
-font-size: 14px;
-font-weight: 700;
-padding: 6px 14px;
-border-radius: 20px;
-min-width: 40px;
-text-align: center;
+.employee-card .count {
+    background: var(--vf-red);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
 }
 
 .employee-list {
-list-style: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-.employee-item {
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 14px 0;
-border-bottom: 1px solid rgba(255,255,255,0.08);
-transition: all 0.2s ease;
+.employee-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid var(--white-border);
 }
 
-.employee-item:last-child {
-border-bottom: none;
-}
-
-.employee-item:hover {
-padding-left: 8px;
-background: rgba(255,255,255,0.05);
-border-radius: 8px;
+.employee-list li:last-child {
+    border-bottom: none;
 }
 
 .employee-info {
-flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .employee-name {
-font-weight: 600;
-font-size: 15px;
-}
-
-.employee-role {
-font-weight: 400;
-font-size: 13px;
-color: rgba(255,255,255,0.6);
-margin-left: 8px;
+    font-weight: 600;
+    color: var(--vf-red-dark);
+    font-size: 14px;
 }
 
 .employee-shift {
-font-size: 12px;
-color: rgba(255,255,255,0.6);
-display: flex;
-align-items: center;
-gap: 6px;
+    font-size: 12px;
+    color: #666;
+    margin-top: 2px;
 }
 
 .employee-time {
-font-size: 13px;
-font-weight: 600;
-padding: 6px 12px;
-border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 8px;
 }
 
-.time-am {
-background: rgba(74, 222, 128, 0.2);
-color: #4ade80;
+.employee-time.morning {
+    background: rgba(251, 191, 36, 0.15);
+    color: #b45309;
 }
 
-.time-pm {
-background: rgba(251, 191, 36, 0.2);
-color: #fbbf24;
+.employee-time.evening {
+    background: rgba(139, 92, 246, 0.15);
+    color: #7c3aed;
 }
 
-.time-off {
-background: rgba(248, 113, 113, 0.2);
-color: #f87171;
+.employee-time.night {
+    background: rgba(59, 130, 246, 0.15);
+    color: #2563eb;
 }
 
-.time-bw {
-background: rgba(139, 92, 246, 0.2);
-color: #a78bfa;
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
 }
 
-.no-results {
-text-align: center;
-padding: 60px 20px;
-color: rgba(255,255,255,0.5);
+.empty-state span {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 16px;
 }
-
-.no-results span {
-font-size: 64px;
-display: block;
-margin-bottom: 20px;
-}
-
-.no-results p {
-font-size: 18px;
-}
-
-.loading {
-text-align: center;
-padding: 60px 20px;
-}
-
-.loading-spinner {
-width: 50px;
-height: 50px;
-border: 4px solid rgba(255,255,255,0.2);
-border-top-color: white;
-border-radius: 50%;
-animation: spin 1s linear infinite;
-margin: 0 auto 20px;
-}
-
-@keyframes spin {
-to { transform: rotate(360deg); }
-}
-
-.search-results-section {
-margin-bottom: 30px;
-}
-
-.search-results-section h3 {
-font-size: 18px;
-margin-bottom: 20px;
-padding-bottom: 12px;
-border-bottom: 2px solid rgba(255,255,255,0.15);
-display: flex;
-align-items: center;
-gap: 10px;
-}
-
-@media (max-width: 768px) {
-body {
-padding: 20px 15px;
-}
-
-h1 {
-font-size: 28px;
-margin-bottom: 30px;
-}
-
-.controls {
-flex-direction: column;
-align-items: stretch;
-}
-
-.search-box, .day-select {
-min-width: 100%;
-}
-
-.cards {
-grid-template-columns: 1fr;
-}
-}
-
 </style>
 </head>
-
 <body>
 
 <div class="container">
-
-<h1><span>📅</span> Team Schedule</h1>
-
-<div class="nav-buttons">
-<a href="index.html" class="nav-btn nav-btn-secondary">← Back to Home</a>
-<a href="todo.html" class="nav-btn nav-btn-secondary">📋 ToDo List</a>
-</div>
+<h1>📅 Team Schedule</h1>
 
 <div class="controls">
-
 <div class="search-box">
-<input type="text" id="search" placeholder="Search employee by name...">
+<input type="text" id="search" placeholder="Search employee by name..." oninput="filterEmployees()">
+</div>
 </div>
 
 <select id="daySelect" class="day-select">
 <option value="">-- Select Day --</option>
 </select>
-
-</div>
 
 <div id="searchResultsSection" class="search-results-section" style="display: none;">
 <h3>🔍 Search Results</h3>
@@ -860,6 +664,32 @@ document.getElementById('daySelect').value = firstDay;
 });
 
 </script>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-items">
+        <a href="index.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-paper-plane"></i>
+            <span class="nav-label">SMS</span>
+        </a>
+        <a href="cst.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-users"></i>
+            <span class="nav-label">CST</span>
+        </a>
+        <a href="sr-sku.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-list-ol"></i>
+            <span class="nav-label">SR & SKU</span>
+        </a>
+        <a href="schedule.html" class="nav-item active">
+            <i class="nav-icon fa-solid fa-calendar-days"></i>
+            <span class="nav-label">Schedule</span>
+        </a>
+        <a href="todo.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-clipboard-list"></i>
+            <span class="nav-label">ToDo</span>
+        </a>
+    </div>
+</nav>
 
 </body>
 </html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="img/vf_icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="img/vf_icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Service Requests & SKU - VF SMS</title>
+<link rel="icon" href="img/vf_icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* SR & SKU Page Specific Styles */
+h1 {
+text-align: center;
+margin-bottom: 24px;
+font-size: 28px;
+font-weight: 700;
+color: var(--vf-red);
+}
+
+.sr-cards-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+gap: 16px;
+margin-top: 16px;
+}
+
+.sku-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+gap: 16px;
+}
+
+.section {
+margin-bottom: 24px;
+}
+
+.section-title {
+font-size: 18px;
+font-weight: 600;
+color: var(--vf-red-dark);
+margin-bottom: 16px;
+padding-bottom: 8px;
+border-bottom: 2px solid var(--vf-red);
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.reason-group {
+margin-bottom: 24px;
+background: var(--white);
+border-radius: 16px;
+padding: 20px;
+border: 2px solid var(--white-border);
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.reason-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 16px;
+padding-bottom: 12px;
+border-bottom: 1px solid var(--white-border);
+}
+
+.reason-title {
+font-size: 16px;
+font-weight: 600;
+color: var(--vf-red);
+}
+
+.reason-count {
+background: linear-gradient(135deg, var(--vf-red), var(--vf-red-dark));
+color: white;
+font-size: 13px;
+font-weight: 700;
+padding: 4px 12px;
+border-radius: 20px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>📋 Service Requests & SKU</h1>
+
+<div class="view-toggle">
+<button id="srBtn" class="active" onclick="switchView('sr')">📝 SR</button>
+<button id="skuBtn" onclick="switchView('sku')">🏷️ SKU</button>
+</div>
+
+<div id="srView">
+<div class="controls">
+<div class="search-box">
+<input type="text" id="srSearch" placeholder="Search SR..." oninput="filterSR()">
+</div>
+<select id="categoryFilter" class="filter-select" onchange="filterSR()">
+<option value="">All Categories</option>
+</select>
+</div>
+
+<div id="srResults">
+<div class="loading">
+<div class="loading-spinner"></div>
+<p>Loading SR data...</p>
+</div>
+</div>
+</div>
+
+<div id="skuView" style="display:none">
+<div class="controls">
+<div class="search-box">
+<input type="text" id="skuSearch" placeholder="Search SKU..." oninput="filterSKU()">
+</div>
+<select id="skuCategoryFilter" class="filter-select" onchange="filterSKU()">
+<option value="">All Categories</option>
+</select>
+</div>
+
+<div id="skuResults">
+<div class="loading">
+<div class="loading-spinner"></div>
+<p>Loading SKU data...</p>
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+const SR_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQAzLqgdGOXKaiEatzK1KOw5Ne_6TKDeYiktjh-EaQsIURhnQ_GVcmxxdBiWq0C_4RW7Js8nog3v4X6/pub?output=csv&gid=23806691";
+const SKU_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQAzLqgdGOXKaiEatzK1KOw5Ne_6TKDeYiktjh-EaQsIURhnQ_GVcmxxdBiWq0C_4RW7Js8nog3v4X6/pub?output=csv&gid=643264885";
+
+let srData = [];
+let skuData = [];
+let currentView = 'sr';
+
+function switchView(view) {
+currentView = view;
+document.getElementById('srBtn').classList.toggle('active', view === 'sr');
+document.getElementById('skuBtn').classList.toggle('active', view === 'sku');
+document.getElementById('srView').style.display = view === 'sr' ? 'block' : 'none';
+document.getElementById('skuView').style.display = view === 'sku' ? 'block' : 'none';
+}
+
+Promise.all([
+fetch(SR_URL).then(res => res.text()),
+fetch(SKU_URL).then(res => res.text())
+]).then(([srText, skuText]) => {
+parseSRData(srText);
+parseSKUData(skuText);
+initFilters();
+renderSR();
+renderSKU();
+}).catch(err => {
+console.error('Error loading data:', err);
+document.getElementById('srResults').innerHTML = '<div class="no-results"><span>❌</span><p>Error loading data. Try different gid values.</p></div>';
+document.getElementById('skuResults').innerHTML = '<div class="no-results"><span>❌</span><p>Error loading data. Try different gid values.</p></div>';
+});
+
+function parseSRData(text) {
+const rows = text.split('\n').map(r => r.split(','));
+if (rows.length < 2) return;
+
+const headers = rows[0].map(h => h?.trim().toLowerCase());
+srData = [];
+
+for (let i = 1; i < rows.length; i++) {
+const row = rows[i];
+if (row.length < 2) continue;
+
+const obj = {};
+headers.forEach((h, idx) => {
+obj[h] = row[idx]?.trim();
+});
+srData.push(obj);
+}
+}
+
+function parseSKUData(text) {
+const rows = text.split('\n').map(r => r.split(','));
+if (rows.length < 2) return;
+
+const headers = rows[0].map(h => h?.trim().toLowerCase());
+skuData = [];
+
+for (let i = 1; i < rows.length; i++) {
+const row = rows[i];
+if (row.length < 2) continue;
+
+const obj = {};
+headers.forEach((h, idx) => {
+obj[h] = row[idx]?.trim();
+});
+skuData.push(obj);
+}
+}
+
+function initFilters() {
+const categorySelect = document.getElementById('categoryFilter');
+const categories = [...new Set(srData.map(item => item['main category'] || item['main category'] || item['maincategory'] || '').filter(c => c))];
+categories.sort().forEach(cat => {
+const opt = document.createElement('option');
+opt.value = cat;
+opt.textContent = cat;
+categorySelect.appendChild(opt);
+});
+
+const skuCategorySelect = document.getElementById('skuCategoryFilter');
+const skuCategories = [...new Set(skuData.map(item => item['main category'] || item['bundle description']?.split(' ')[0] || 'Other').filter(c => c))];
+skuCategories.sort().forEach(cat => {
+const opt = document.createElement('option');
+opt.value = cat;
+opt.textContent = cat;
+skuCategorySelect.appendChild(opt);
+});
+}
+
+function filterSR() {
+const search = document.getElementById('srSearch').value.toLowerCase();
+const category = document.getElementById('categoryFilter').value;
+
+let filtered = srData.filter(item => {
+const mainCat = item['main category'] || item['main category'] || item['maincategory'] || '';
+const matchesSearch = !search || Object.values(item).some(v => v?.toLowerCase().includes(search));
+const matchesCategory = !category || mainCat === category;
+return matchesSearch && matchesCategory;
+});
+
+renderFilteredSR(filtered);
+}
+
+function renderSR() {
+const search = document.getElementById('srSearch').value.toLowerCase();
+const category = document.getElementById('categoryFilter').value;
+
+let filtered = srData.filter(item => {
+const mainCat = item['main category'] || item['main category'] || item['maincategory'] || '';
+const matchesSearch = !search || Object.values(item).some(v => v?.toLowerCase().includes(search));
+const matchesCategory = !category || mainCat === category;
+return matchesSearch && matchesCategory;
+});
+
+renderFilteredSR(filtered);
+}
+
+function renderFilteredSR(filtered) {
+const container = document.getElementById('srResults');
+
+if (filtered.length === 0) {
+container.innerHTML = '<div class="no-results"><span>🔍</span><p>No SR found</p></div>';
+return;
+}
+
+const grouped = {};
+filtered.forEach(item => {
+const reason = item['sr reason'] || item['sr reason'] || item['srreason'] || item['reason'] || 'Other';
+if (!grouped[reason]) grouped[reason] = [];
+grouped[reason].push(item);
+});
+
+let html = '';
+Object.entries(grouped).forEach(([reason, items]) => {
+const headers = Object.keys(items[0]).filter(h => h !== 'sr reason' && h !== 'srreason' && h !== 'reason' && h !== 'main category' && h !== 'maincategory');
+
+html += `
+<div class="reason-group">
+<div class="reason-header">
+<span class="reason-title">${reason}</span>
+<span class="reason-count">${items.length}</span>
+</div>
+<div class="sr-cards-grid">
+${items.map(item => `
+<div class="sr-card">
+${headers.map(h => `
+<div class="sr-field">
+<span class="sr-label">${h}</span>
+<span class="sr-value">${item[h] || '-'}</span>
+</div>
+`).join('')}
+</div>
+`).join('')}
+</div>
+</div>
+`;
+});
+
+container.innerHTML = html;
+}
+
+function filterSKU() {
+const search = document.getElementById('skuSearch').value.toLowerCase();
+const category = document.getElementById('skuCategoryFilter').value;
+
+let filtered = skuData.filter(item => {
+const mainCat = item['main category'] || item['bundle description']?.split(' ')[0] || 'Other';
+const matchesSearch = !search || Object.values(item).some(v => v?.toLowerCase().includes(search));
+const matchesCategory = !category || mainCat === category;
+return matchesSearch && matchesCategory;
+});
+
+renderFilteredSKU(filtered);
+}
+
+function renderSKU() {
+filterSKU();
+}
+
+function renderFilteredSKU(filtered) {
+const container = document.getElementById('skuResults');
+
+if (filtered.length === 0) {
+container.innerHTML = '<div class="no-results"><span>🔍</span><p>No SKU found</p></div>';
+return;
+}
+
+if (filtered.length === 0) {
+container.innerHTML = '<div class="no-results"><span>🔍</span><p>No SKU found</p></div>';
+return;
+}
+
+const grouped = {};
+filtered.forEach(item => {
+const category = item['main category'] || item['bundle description']?.split(' ')[0] || 'Other';
+if (!grouped[category]) grouped[category] = [];
+grouped[category].push(item);
+});
+
+let html = '';
+Object.entries(grouped).forEach(([category, items]) => {
+html += `
+<div class="reason-group">
+<div class="reason-header">
+<span class="reason-title">${category}</span>
+<span class="reason-count">${items.length}</span>
+</div>
+<table class="data-table">
+<thead>
+<tr>
+<th>Bundle Number</th>
+<th>Bundle Description</th>
+</tr>
+</thead>
+<tbody>
+${items.map(item => `
+<tr>
+<td>${item['bundle number'] || '-'}</td>
+<td>${item['bundle description'] || '-'}</td>
+</tr>
+`).join('')}
+</tbody>
+</table>
+</div>
+`;
+});
+
+container.innerHTML = html;
+}
+</script>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-items">
+        <a href="index.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-paper-plane"></i>
+            <span class="nav-label">SMS</span>
+        </a>
+        <a href="cst.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-users"></i>
+            <span class="nav-label">CST</span>
+        </a>
+        <a href="sr-sku.html" class="nav-item active">
+            <i class="nav-icon fa-solid fa-list-ol"></i>
+            <span class="nav-label">SR & SKU</span>
+        </a>
+        <a href="schedule.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-calendar-days"></i>
+            <span class="nav-label">Schedule</span>
+        </a>
+        <a href="todo.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-clipboard-list"></i>
+            <span class="nav-label">ToDo</span>
+        </a>
+    </div>
+</nav>
+
+</body>
+</html>

@@ -4,285 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="img/vf_icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="img/vf_icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>VF SMS</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #d62828 0%, #b91c1c 30%, #991b1b 60%, #7f1d1d 100%);
-    background-attachment: fixed;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-}
-
-.container {
-    max-width: 750px;
-    width: 100%;
-    margin: 20px auto;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 24px;
-    padding: 32px;
-    box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-h2 {
-    color: white;
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 24px;
-    text-align: center;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    letter-spacing: -0.5px;
-}
-
-h3 {
-    color: rgba(255, 255, 255, 0.95);
-    font-size: 16px;
-    font-weight: 600;
-    margin: 20px 0 14px 0;
-    padding-bottom: 8px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-    letter-spacing: 0.5px;
-}
-
-label {
-    display: block;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 6px;
-    letter-spacing: 0.3px;
-}
-
-input, select, textarea {
-    width: 100%;
-    padding: 14px 16px;
-    margin-bottom: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 12px;
-    font-size: 14px;
-    font-family: inherit;
-    background: rgba(255, 255, 255, 0.12);
-    color: white;
-    transition: all 0.3s ease;
-    outline: none;
-}
-
-input::placeholder, textarea::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-input:focus, select:focus, textarea:focus {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
-}
-
-select {
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    padding-right: 40px;
-}
-
-select option {
-    background: #667eea;
-    color: white;
-}
-
-textarea {
-    height: 280px;
-    resize: vertical;
-    font-size: 13px;
-    line-height: 1.6;
-}
-
-.button-group {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-}
-
-button {
-    flex: 1;
-    min-width: 140px;
-    padding: 14px 24px;
-    border: none;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    font-family: inherit;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    letter-spacing: 0.3px;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #e63946 0%, #d62828 50%, #b91c1c 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(214, 40, 40, 0.4);
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(214, 40, 40, 0.5);
-}
-
-.btn-secondary {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px);
-}
-
-.result {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 16px;
-    margin: 16px 0;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.result span {
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.green { color: #4ade80 !important; }
-.orange { color: #fbbf24 !important; }
-.red { color: #f87171 !important; }
-
-.input-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-}
-
-.input-full {
-    grid-column: 1 / -1;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-    body {
-        padding: 12px;
-    }
-
-    .container {
-        padding: 20px;
-        margin: 10px auto;
-        border-radius: 20px;
-    }
-
-    h2 {
-        font-size: 22px;
-        margin-bottom: 20px;
-    }
-
-    h3 {
-        font-size: 14px;
-        margin: 16px 0 10px 0;
-    }
-
-    input, select, textarea {
-        padding: 12px 14px;
-        font-size: 14px;
-        border-radius: 10px;
-    }
-
-    .input-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .button-group {
-        flex-direction: column;
-    }
-
-    button {
-        width: 100%;
-    }
-
-    .result {
-        flex-direction: column;
-        gap: 8px;
-        text-align: center;
-    }
-
-    .result span {
-        font-size: 16px;
-    }
-
-    textarea {
-        height: 220px;
-    }
-}
-
-@media (max-width: 400px) {
-    .container {
-        padding: 16px;
-    }
-
-    h2 {
-        font-size: 20px;
-    }
-}
-
-/* Animation */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.container {
-    animation: fadeIn 0.5s ease-out;
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.4);
-}
 .store-c{
     text-align: center;
-    color: aliceblue;
+    color: var(--vf-red);
+    font-weight: 600;
 }
 
 /* Floating Labels */
@@ -300,7 +32,7 @@ button {
     left: 16px;
     top: 50%;
     transform: translateY(-50%);
-    color: rgba(255, 255, 255, 0.5);
+    color: #999;
     font-size: 14px;
     font-family: inherit;
     pointer-events: none;
@@ -308,15 +40,14 @@ button {
     opacity: 1;
 }
 
-/* For inputs with default values, show label above */
 .input-wrapper input.has-value + .floating-label,
 .input-wrapper input:focus + .floating-label,
 .input-wrapper input:not(:placeholder-shown) + .floating-label {
     top: -8px;
     left: 12px;
     font-size: 11px;
-    color: rgba(255, 255, 255, 0.9);
-    background: rgba(214, 40, 40, 0.8);
+    color: white;
+    background: var(--vf-red);
     padding: 2px 8px;
     border-radius: 4px;
     opacity: 1;
@@ -327,7 +58,23 @@ button {
 }
 
 .input-wrapper input:not(:placeholder-shown)::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: transparent;
+}
+
+.result {
+    background: var(--white);
+    border: 2px solid var(--vf-red);
+    border-radius: 12px;
+    padding: 14px 20px;
+    margin: 12px 0;
+    color: var(--vf-red-dark);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.result span {
+    color: var(--vf-red);
+    font-weight: 700;
 }
 </style>
 </head>
@@ -336,30 +83,6 @@ button {
 <div class="container">
 <h2>📊 Daily SMS Report</h2>
 <div style="text-align:center;margin-bottom:20px">
-
-<a href="cst.html">
-
-<button class="btn-secondary">
-👥 CST Data
-</button>
-
-</a>
-
-<a href="schedule.html">
-
-<button class="btn-secondary">
-View Schedules
-</button>
-
-</a>
-
-<a href="todo.html">
-
-<button class="btn-secondary">
-📋 ToDo List
-</button>
-
-</a>
 
 </div>
 <h3>Director by : Mohamed Ali ❤</h3> <!-- -->
@@ -402,7 +125,13 @@ Consumer Voice: <span id="consumer_voice_total">0</span>
 <div class="input-wrapper"><input type="number" id="voice_required" placeholder=" " value="850"><span class="floating-label">Voice Points Required</span></div>
 <div class="input-wrapper"><input type="number" id="consumer_ach" placeholder=" "><span class="floating-label">Consumer Voice Ach</span></div>
 <div class="input-wrapper"><input type="number" id="consumer_required" placeholder=" " value="80"><span class="floating-label">Consumer Voice Required</span></div>
-<div class="input-wrapper"><input type="number" id="terminal_ach" placeholder=" "><span class="floating-label">Terminal Points Ach</span></div>
+<div class="input-wrapper" style="display:flex;align-items:center;gap:8px">
+<input type="number" id="terminal_ach" placeholder=" " style="flex:1">
+<span class="floating-label">Terminal Points Ach</span>
+<button type="button" onclick="openCalculator('terminal_ach')" style="width:44px;height:44px;background:linear-gradient(135deg,var(--vf-red),var(--vf-red-dark));color:white;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">
+<i class="fa-solid fa-calculator"></i>
+</button>
+</div>
 <div class="input-wrapper"><input type="number" id="terminal_required" placeholder=" " value="0"><span class="floating-label">Terminal Points Required</span></div>
 <div class="input-wrapper"><input type="number" id="adsl_ach" placeholder=" "><span class="floating-label">ADSL Ach</span></div>
 <div class="input-wrapper"><input type="number" id="adsl_required" placeholder=" " value="0"><span class="floating-label">ADSL Required</span></div>
@@ -433,7 +162,7 @@ Consumer Voice: <span id="consumer_voice_total">0</span>
 <div class="input-wrapper"><input type="number" id="red_target1" placeholder=" "><span class="floating-label">Red Target</span></div>
 <div class="input-wrapper"><input type="number" id="red_ach1" placeholder=" "><span class="floating-label">Red Achievement</span></div>
 <div class="input-wrapper"><input type="number" id="terminal_target1" placeholder=" "><span class="floating-label">Terminal Target</span></div>
-<div class="input-wrapper"><input type="number" id="terminal_ach1" placeholder=" "><span class="floating-label">Terminal Ach</span></div>
+<div class="input-wrapper" style="display:flex;align-items:center;gap:8px"><input type="number" id="terminal_ach1" placeholder=" " style="flex:1"><span class="floating-label">Terminal Ach</span><button type="button" onclick="openCalculator('terminal_ach1')" style="width:44px;height:44px;background:linear-gradient(135deg,var(--vf-red),var(--vf-red-dark));color:white;border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0"><i class="fa-solid fa-calculator"></i></button></div>
 <div class="input-wrapper"><input type="number" id="vmt1" placeholder=" " value="53"><span class="floating-label">VMT Wallet</span></div>
 <div class="input-wrapper"><input type="text" id="contracts_name" placeholder=" " value="m.ali"><span class="floating-label">Contracts & Sim Swap Form Name</span></div>
 <div class="input-wrapper"><input type="number" id="mnp1" placeholder=" "><span class="floating-label">MNP</span></div>
@@ -631,17 +360,17 @@ function generateMessage(){
         message=`${store}
 ${date}
 
-Voice points daily ach :${voiceAch}
-Voice points required : ${val("voice_required")}
+V.P daily ach : ${voiceAch}
+V.P required : ${val("voice_required")}
 
-Consumer voice daily ach : ${consumerVoice}
-Consumer voice daily required : ${val("consumer_required")}
-Terminals points ac : ${val("terminal_ach")}
-Terminal points  required : ${val("terminal_required")}
+C.V daily ach : ${consumerVoice}
+C.V daily required : ${val("consumer_required")}
+T.P ach : ${val("terminal_ach")}
+T.P required : ${val("terminal_required")}
 ADSl daily ach : ${val("adsl_ach")}
 ADSl daily required : ${val("adsl_required")}
 
-VMT Active wallet ach: ${val("vmt")}
+V.cash wallet ach: ${val("vmt")}
 Active wallet required.  : ${val("wallet_required")}
 Red New : ${val("red")}
 Red Conversion : ${val("red_conversion")}
@@ -727,6 +456,86 @@ function clearToday(){
     saveData();
 }
 
+</script>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-items">
+        <a href="index.html" class="nav-item active">
+            <i class="nav-icon fa-solid fa-paper-plane"></i>
+            <span class="nav-label">SMS</span>
+        </a>
+        <a href="cst.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-users"></i>
+            <span class="nav-label">CST</span>
+        </a>
+        <a href="sr-sku.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-list-ol"></i>
+            <span class="nav-label">SR & SKU</span>
+        </a>
+        <a href="schedule.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-calendar-days"></i>
+            <span class="nav-label">Schedule</span>
+        </a>
+        <a href="todo.html" class="nav-item">
+            <i class="nav-icon fa-solid fa-clipboard-list"></i>
+            <span class="nav-label">ToDo</span>
+        </a>
+    </div>
+</nav>
+
+<!-- Calculator Modal -->
+<div id="calcModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:2000;justify-content:center;align-items:center;padding:20px" onclick="if(event.target===this)closeCalculator()">
+<div style="background:white;border-radius:20px;padding:24px;max-width:350px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.4)">
+<div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:20px">
+<i class="fa-solid fa-calculator" style="font-size:24px;color:var(--vf-red)"></i>
+<h3 style="color:var(--vf-red);margin:0;font-size:20px">Terminal Calculator</h3>
+</div>
+<div style="margin-bottom:16px">
+<label style="color:#666;font-size:13px;font-weight:500;display:block;margin-bottom:8px">Enter numbers (one per line):</label>
+<textarea id="calcInput" rows="5" style="width:100%;padding:14px;border:2px solid var(--white-border);border-radius:12px;font-size:15px;resize:none;outline:none;transition:border-color 0.3s" onfocus="this.style.borderColor='var(--vf-red)'" onblur="this.style.borderColor='var(--white-border)'" placeholder="10&#10;20&#10;30"></textarea>
+</div>
+<div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px">
+<button onclick="calculateSum()" style="flex:1;padding:12px;background:linear-gradient(135deg,var(--vf-red),var(--vf-red-dark));color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:14px"> (Sum)</button>
+</div>
+<div id="calcResult" style="text-align:center;font-size:20px;font-weight:700;color:var(--vf-red);padding:16px;background:rgba(214,40,40,0.08);border-radius:12px;margin-bottom:16px;min-height:52px;display:flex;align-items:center;justify-content:center"></div>
+<div style="display:flex;gap:10px">
+<button onclick="applyCalcResult()" style="flex:1;padding:14px;background:linear-gradient(135deg,var(--vf-red),var(--vf-red-dark));color:white;border:none;border-radius:12px;cursor:pointer;font-weight:600;font-size:15px">OK</button>
+<button onclick="closeCalculator()" style="flex:1;padding:14px;background:#e0e0e0;color:#333;border:none;border-radius:12px;cursor:pointer;font-weight:600;font-size:15px">Cancel</button>
+</div>
+</div>
+</div>
+
+<script>
+let currentCalcField = '';
+let calcResultValue = '';
+
+function openCalculator(fieldId) {
+currentCalcField = fieldId;
+document.getElementById('calcModal').style.display = 'flex';
+document.getElementById('calcInput').value = '';
+document.getElementById('calcResult').textContent = '';
+calcResultValue = '';
+}
+
+function closeCalculator() {
+document.getElementById('calcModal').style.display = 'none';
+}
+
+function calculateSum() {
+const nums = document.getElementById('calcInput').value.split('\n').map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+if (nums.length === 0) return;
+calcResultValue = nums.reduce((a, b) => a + b, 0);
+document.getElementById('calcResult').textContent = 'المجموع = ' + calcResultValue;
+}
+
+function applyCalcResult() {
+if (calcResultValue !== '') {
+document.getElementById(currentCalcField).value = calcResultValue;
+document.getElementById(currentCalcField).dispatchEvent(new Event('input'));
+}
+closeCalculator();
+}
 </script>
 
 </body>
