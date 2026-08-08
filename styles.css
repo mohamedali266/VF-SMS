@@ -83,12 +83,13 @@ input, select, textarea {
     margin-bottom: 14px;
     border: 2px solid var(--white-border);
     border-radius: 12px;
-    font-size: 14px;
+    font-size: 16px;
     font-family: inherit;
     background: var(--white);
     color: #333333;
     transition: all 0.3s ease;
     outline: none;
+    touch-action: manipulation;
 }
 
 input::placeholder, textarea::placeholder {
@@ -846,7 +847,7 @@ button {
 
     input, select, textarea {
         padding: 12px 14px;
-        font-size: 14px;
+        font-size: 16px !important;
         border-radius: 10px;
     }
 
